@@ -37,5 +37,24 @@ export function useServices() {
     }
   };
 
-  return { services, loading, error, refresh: fetchServices, toggleService };
+  const createService = async (data: Partial<Service>) => {
+    try {
+      await servicesApi.create(data);
+      await fetchServices();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to create service");
+      throw err;
+    }
+  };
+
+  const deleteService = async (id: string) => {
+    try {
+      await servicesApi.delete(id);
+      await fetchServices();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to delete service");
+    }
+  };
+
+  return { services, loading, error, refresh: fetchServices, toggleService, createService, deleteService };
 }

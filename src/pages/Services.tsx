@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, Play, Square, ExternalLink, RefreshCw, Trash2 } from "lucide-react";
 import { useServices } from "../hooks/useServices";
@@ -12,10 +13,12 @@ import {
 } from "../components/ui/Table";
 import { StatusBadge } from "../components/ui/StatusBadge";
 import { Card, CardContent } from "../components/ui/Card";
+import { NewServiceModal } from "../components/service/NewServiceModal";
 
 export function Services() {
   const navigate = useNavigate();
-  const { services, loading, error, refresh, toggleService } = useServices();
+  const { services, loading, error, refresh, toggleService, createService, deleteService } = useServices();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   if (loading) {
     return (
@@ -24,6 +27,12 @@ export function Services() {
       </div>
     );
   }
+
+  const handleDelete = async (id: string, name: string) => {
+    if (window.confirm(`Are you sure you want to delete service "${name}"?`)) {
+      await deleteService(id);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -37,7 +46,7 @@ export function Services() {
             <RefreshCw className="w-4 h-4 mr-2" />
             Refresh
           </Button>
-          <Button>
+          <Button onClick={() => setIsModalOpen(true)}>
             <Plus className="w-4 h-4 mr-2" />
             New Service
           </Button>
@@ -114,7 +123,12 @@ export function Services() {
                           )}
                           {service.enabled ? "Stop" : "Start"}
                         </Button>
-                        <Button size="sm" variant="ghost" className="text-red-400 hover:text-red-300 hover:bg-red-500/10">
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                          onClick={() => handleDelete(service.id, service.name)}
+                        >
                           <Trash2 className="w-3.5 h-3.5" />
                         </Button>
                       </div>
@@ -126,6 +140,12 @@ export function Services() {
           </Table>
         </CardContent>
       </Card>
+
+      <NewServiceModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={createService}
+      />
     </div>
   );
 }
