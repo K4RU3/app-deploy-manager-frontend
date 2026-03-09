@@ -1,0 +1,599 @@
+# フロントエンド開発仕様書
+
+（LLM主導開発用ドキュメント）
+
+---
+
+# 1. プロジェクト概要
+
+本プロジェクトは **自宅サーバー用PaaS管理システム**のフロントエンドを開発する。
+
+目的は以下。
+
+* サービスの公開・停止管理
+* Gitベースデプロイ管理
+* Dockerコンテナ管理
+* データボリュームバックアップ管理
+* デプロイ履歴・ログの可視化
+
+フロントエンドは **管理UI**として機能し、バックエンドAPIを操作する。
+
+---
+
+# 2. 技術スタック
+
+## フレームワーク
+
+* React
+* TypeScript
+* TSX
+
+## ビルド
+
+* Vite
+
+## ルーティング
+
+* React Router
+
+## 状態管理
+
+シンプルな構成を採用
+
+* React Hooks
+* Context API
+
+将来拡張
+
+* Zustand（任意）
+
+## UIライブラリ
+
+最小構成
+
+* TailwindCSS
+
+または
+
+* shadcn/ui
+
+## HTTPクライアント
+
+* fetch
+  または
+* axios
+
+---
+
+# 3. フロントエンド構成
+
+ディレクトリ構造
+
+```
+src/
+
+  api/
+    client.ts
+    services.ts
+    backups.ts
+    deploy.ts
+    git.ts
+
+  components/
+    layout/
+    ui/
+    service/
+    backup/
+
+  pages/
+    Dashboard.tsx
+    Services.tsx
+    ServiceDetail.tsx
+    Commits.tsx
+    Backups.tsx
+    DeployLogs.tsx
+
+  hooks/
+    useServices.ts
+    useCommits.ts
+    useBackups.ts
+
+  types/
+    service.ts
+    commit.ts
+    backup.ts
+    deploy.ts
+
+  router/
+    router.tsx
+
+  utils/
+
+  App.tsx
+  main.tsx
+```
+
+---
+
+# 4. データモデル
+
+## Service
+
+```
+Service {
+  id: string
+  name: string
+  domain: string
+  repo: string
+  branch: string
+
+  deployMode: "branch" | "commit"
+
+  selectedCommit?: string
+
+  containerPort: number
+
+  enabled: boolean
+
+  dockerVolume: string
+
+  autoBackup: boolean
+}
+```
+
+---
+
+## Commit
+
+```
+Commit {
+  hash: string
+  shortHash: string
+  message: string
+  author: string
+  date: string
+}
+```
+
+---
+
+## Backup
+
+```
+Backup {
+  file: string
+  size: string
+  createdAt: string
+}
+```
+
+---
+
+## DeployLog
+
+```
+DeployLog {
+  id: string
+  serviceId: string
+  commit: string
+  status: string
+  createdAt: string
+}
+```
+
+---
+
+# 5. 画面構成
+
+アプリは以下の画面で構成する。
+
+```
+Dashboard
+Services
+Service Detail
+Commit History
+Backups
+Deploy Logs
+```
+
+---
+
+# 6. Dashboard
+
+目的
+
+* システム全体状態表示
+
+表示内容
+
+* 稼働サービス数
+* 停止サービス数
+* 最近のデプロイ
+* 最近のバックアップ
+
+UI要素
+
+```
+System Status
+Services Summary
+Recent Deployments
+Recent Backups
+```
+
+---
+
+# 7. Servicesページ
+
+目的
+
+* 管理対象サービス一覧
+
+表示
+
+```
+Service name
+Domain
+Repository
+Status
+Actions
+```
+
+Actions
+
+```
+Open
+Deploy
+Enable
+Disable
+Delete
+```
+
+UIテーブル例
+
+```
+Name   Domain            Status   Actions
+blog   blog.example.com  Running  Open Deploy Disable
+api    api.example.com   Stopped  Enable
+```
+
+---
+
+# 8. Service Detailページ
+
+目的
+
+* サービス個別管理
+
+表示項目
+
+```
+Name
+Domain
+Repository
+Branch
+Deploy Mode
+Container Port
+Volume
+Auto Backup
+Status
+```
+
+操作
+
+```
+Deploy latest
+Deploy commit
+Enable
+Disable
+Manual Backup
+View commits
+View backups
+```
+
+---
+
+# 9. Commit Historyページ
+
+目的
+
+* Git履歴表示
+* commit指定デプロイ
+
+表示
+
+```
+Hash
+Message
+Author
+Date
+Action
+```
+
+Action
+
+```
+Deploy
+```
+
+例
+
+```
+a72f8d1 Fix login bug      user1  2026-03-09 Deploy
+d91a223 Add API endpoint   user2  2026-03-08 Deploy
+```
+
+---
+
+# 10. Backupページ
+
+目的
+
+* Docker volumeバックアップ管理
+
+表示
+
+```
+Backup file
+Size
+Date
+Actions
+```
+
+Actions
+
+```
+Download
+Restore
+Delete
+```
+
+ボタン
+
+```
+Create Backup
+```
+
+---
+
+# 11. Deploy Logsページ
+
+目的
+
+* デプロイ履歴表示
+
+表示
+
+```
+Service
+Commit
+Status
+Date
+Logs
+```
+
+ログは展開表示。
+
+---
+
+# 12. API仕様
+
+## Services
+
+```
+GET /services
+POST /services
+DELETE /services/:id
+```
+
+---
+
+## Service Control
+
+```
+POST /services/:id/enable
+POST /services/:id/disable
+```
+
+---
+
+## Deploy
+
+```
+POST /services/:id/deploy/latest
+POST /services/:id/deploy/commit
+```
+
+---
+
+## Git
+
+```
+GET /services/:id/commits
+```
+
+---
+
+## Backup
+
+```
+GET /services/:id/backups
+POST /services/:id/backup
+POST /services/:id/restore
+GET /services/:id/backups/:file
+```
+
+---
+
+# 13. UIコンポーネント
+
+共通コンポーネント
+
+```
+Button
+Card
+Modal
+Table
+StatusBadge
+ConfirmDialog
+```
+
+サービス専用
+
+```
+ServiceCard
+ServiceStatusBadge
+DeployButton
+EnableToggle
+```
+
+バックアップ専用
+
+```
+BackupTable
+BackupDownloadButton
+BackupRestoreButton
+```
+
+---
+
+# 14. 状態管理
+
+管理対象状態
+
+```
+services
+selectedService
+commits
+backups
+deployLogs
+```
+
+基本方針
+
+* ページ単位でfetch
+* React hooks管理
+
+---
+
+# 15. エラーハンドリング
+
+全API共通
+
+```
+loading
+error
+success
+```
+
+UI表示
+
+```
+Loading spinner
+Error message
+Retry button
+```
+
+---
+
+# 16. セキュリティ
+
+管理UIは
+
+* 同一ネットワーク限定
+* nginxでIP制限
+
+フロント側では
+
+```
+login state
+session cookie
+```
+
+管理する。
+
+---
+
+# 17. UIデザイン指針
+
+基本方針
+
+* ダークテーマ対応
+* シンプルな管理UI
+* 情報優先
+
+レイアウト
+
+```
+Sidebar navigation
+Top header
+Content area
+```
+
+---
+
+# 18. パフォーマンス
+
+方針
+
+* ページ単位API取得
+* 仮想スクロール不要
+* データ量小規模
+
+---
+
+# 19. LLM開発ルール
+
+LLMは以下の単位でコード生成する。
+
+推奨タスク
+
+```
+create service table component
+create backup list component
+create commit history page
+create deploy logs page
+```
+
+1タスク＝1コンポーネント。
+
+---
+
+# 20. MVP優先順位
+
+優先実装
+
+1
+
+Servicesページ
+
+2
+
+Service Detail
+
+3
+
+Deploy
+
+4
+
+Commit History
+
+5
+
+Backup管理
+
+6
+
+Dashboard
+
+---
+
+# まとめ
+
+このフロントエンドは
+
+* React + TypeScript
+* APIベース管理UI
+* Git / Docker / nginx / Backupの操作
+
+を統合する **PaaS管理インターフェース**として設計される。
