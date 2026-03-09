@@ -12,6 +12,9 @@ export const servicesApi = {
   delete: (id: string) =>
     request<void>(`/services/${id}`, {
       method: "DELETE",
+      headers: {
+        "Content-Type": "text/plain",
+      },
     }),
   enable: (id: string) =>
     request<void>(`/services/${id}/enable`, {
