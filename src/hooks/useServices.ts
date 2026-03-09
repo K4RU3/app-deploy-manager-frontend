@@ -37,7 +37,7 @@ export function useServices() {
     }
   };
 
-  const createService = async (data: Partial<Service>) => {
+  const createService = async (data: { repositoryUrl: string; branch?: string }) => {
     try {
       await servicesApi.create(data);
       await fetchServices();

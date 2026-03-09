@@ -4,7 +4,7 @@ import type { Service } from "../types/service";
 export const servicesApi = {
   list: () => request<Service[]>("/services"),
   get: (id: string) => request<Service>(`/services/${id}`),
-  create: (data: Partial<Service>) =>
+  create: (data: { repositoryUrl: string; branch?: string }) =>
     request<Service>("/services", {
       method: "POST",
       body: JSON.stringify(data),
