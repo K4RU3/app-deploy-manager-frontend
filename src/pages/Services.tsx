@@ -54,7 +54,7 @@ export function Services() {
       </div>
 
       {error && (
-        <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded-md text-sm">
+        <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded-md text-sm whitespace-pre-wrap font-mono">
           {error}
         </div>
       )}

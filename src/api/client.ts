@@ -14,7 +14,8 @@ export async function request<T>(
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || "An error occurred");
+    const errorMessage = errorData.error || errorData.message || "An error occurred";
+    throw new Error(errorMessage);
   }
 
   // Handle cases where response might be empty (like 204 No Content)
