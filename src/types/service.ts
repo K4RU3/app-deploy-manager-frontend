@@ -8,7 +8,11 @@ export interface Service {
   branch: string;
   deployMode: DeployMode;
   selectedCommit?: string;
-  containerPort: number;
+  port?: {
+    host: number;
+    container: number;
+    protocol: "tcp" | "udp";
+  };
   enabled: boolean;
   dockerVolume: string;
   autoBackup: boolean;

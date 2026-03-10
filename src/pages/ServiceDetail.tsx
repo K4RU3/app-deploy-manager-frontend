@@ -176,8 +176,12 @@ export function ServiceDetail() {
                   <p className="text-sm text-zinc-300">{service.branch}</p>
                 </div>
                 <div>
-                  <label className="text-xs text-zinc-500 uppercase font-bold">Port</label>
-                  <p className="text-sm text-zinc-300">{service.containerPort}</p>
+                  <label className="text-xs text-zinc-500 uppercase font-bold">Port Mapping</label>
+                  <p className="text-sm text-zinc-300">
+                    {service.port 
+                      ? `${service.port.host}:${service.port.container}/${service.port.protocol}`
+                      : "None"}
+                  </p>
                 </div>
                 <div>
                   <label className="text-xs text-zinc-500 uppercase font-bold">Deploy Mode</label>

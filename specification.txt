@@ -131,7 +131,11 @@ Service {
 
   selectedCommit?: string
 
-  containerPort: number
+  port?: {
+    host: number
+    container: number
+    protocol: "tcp" | "udp"
+  }
 
   enabled: boolean
 
@@ -272,7 +276,7 @@ Domain
 Repository
 Branch
 Deploy Mode
-Container Port
+Port Mapping
 Volume
 Auto Backup
 Status
