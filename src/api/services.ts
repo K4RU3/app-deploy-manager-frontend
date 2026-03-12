@@ -19,9 +19,15 @@ export const servicesApi = {
   enable: (id: string) =>
     request<void>(`/services/${id}/enable`, {
       method: "POST",
+      headers: {
+        "Content-Type": "text/plain",
+      },
     }),
   disable: (id: string) =>
     request<void>(`/services/${id}/disable`, {
       method: "POST",
+      headers: {
+        "Content-Type": "text/plain",
+      },
     }),
 };
