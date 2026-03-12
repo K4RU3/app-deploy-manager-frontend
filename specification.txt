@@ -142,6 +142,8 @@ Service {
   dockerVolume: string
 
   autoBackup: boolean
+  
+  status: 'Running' | 'Stopped' | 'Error';
 }
 ```
 
