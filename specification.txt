@@ -143,7 +143,7 @@ Service {
 
   autoBackup: boolean
   
-  status: 'Running' | 'Stopped' | 'Error';
+  status?: 'Running' | 'Stopped' | 'Error';
 }
 ```
 
@@ -387,6 +387,7 @@ Logs
 
 ```
 GET /services
+GET /services/:id
 POST /services
 DELETE /services/:id
 ```
