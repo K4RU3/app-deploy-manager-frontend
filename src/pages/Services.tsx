@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Play, Square, ExternalLink, RefreshCw, Trash2 } from "lucide-react";
+import {
+  Plus,
+  Play,
+  Square,
+  ExternalLink,
+  RefreshCw,
+  Trash2,
+} from "lucide-react";
 import { useServices } from "../hooks/useServices";
 import { Button } from "../components/ui/Button";
 import {
@@ -17,7 +24,15 @@ import { NewServiceModal } from "../components/service/NewServiceModal";
 
 export function Services() {
   const navigate = useNavigate();
-  const { services, loading, error, refresh, toggleService, createService, deleteService } = useServices();
+  const {
+    services,
+    loading,
+    error,
+    refresh,
+    toggleService,
+    createService,
+    deleteService,
+  } = useServices();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   if (loading) {
@@ -39,7 +54,9 @@ export function Services() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-white">Services</h1>
-          <p className="text-zinc-400 text-sm">Manage your deployed applications and services.</p>
+          <p className="text-zinc-400 text-sm">
+            Manage your deployed applications and services.
+          </p>
         </div>
         <div className="flex gap-3">
           <Button variant="secondary" onClick={refresh}>
@@ -73,7 +90,10 @@ export function Services() {
             <TableBody>
               {services.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center py-12 text-zinc-500">
+                  <TableCell
+                    colSpan={4}
+                    className="text-center py-12 text-zinc-500"
+                  >
                     No services found. Create your first service to get started.
                   </TableCell>
                 </TableRow>
@@ -82,9 +102,11 @@ export function Services() {
                   <TableRow key={service.id}>
                     <TableCell>
                       <div className="flex flex-col">
-                        <span className="font-semibold text-white">{service.name}</span>
+                        <span className="font-semibold text-white">
+                          {service.name}
+                        </span>
                         <span className="text-xs text-zinc-500 font-mono truncate max-w-xs">
-                          {service.repo}
+                          {service.repositoryUrl}
                         </span>
                       </div>
                     </TableCell>
@@ -114,7 +136,9 @@ export function Services() {
                         <Button
                           size="sm"
                           variant="secondary"
-                          onClick={() => toggleService(service.id, service.enabled)}
+                          onClick={() =>
+                            toggleService(service.id, service.enabled)
+                          }
                         >
                           {service.enabled ? (
                             <Square className="w-3.5 h-3.5 mr-1.5 fill-current" />
@@ -123,9 +147,9 @@ export function Services() {
                           )}
                           {service.enabled ? "Stop" : "Start"}
                         </Button>
-                        <Button 
-                          size="sm" 
-                          variant="ghost" 
+                        <Button
+                          size="sm"
+                          variant="ghost"
                           className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
                           onClick={() => handleDelete(service.id, service.name)}
                         >
