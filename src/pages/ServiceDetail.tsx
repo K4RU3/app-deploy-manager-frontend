@@ -39,7 +39,7 @@ export function ServiceDetail() {
   const [activeTab, setActiveTab] = useState<"overview" | "commits" | "backups">("overview");
 
   const { commits, loading: commitsLoading } = useCommits(id);
-  const { backups, loading: backupsLoading, createBackup, restoreBackup, deleteBackup } = useBackups(id);
+  const { backups, loading: backupsLoading, createBackup, restoreBackup, deleteBackup, downloadBackup } = useBackups(id);
 
   const fetchService = useCallback(async () => {
     if (!id) return;
@@ -307,7 +307,12 @@ export function ServiceDetail() {
                       <TableCell className="text-zinc-500">{new Date(backup.createdAt).toLocaleString()}</TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          <Button size="sm" variant="ghost" title="Download">
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            title="Download"
+                            onClick={() => downloadBackup(backup.file)}
+                          >
                             <Download className="w-4 h-4" />
                           </Button>
                           <Button size="sm" variant="secondary" onClick={() => restoreBackup(backup.file)}>

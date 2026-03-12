@@ -1,10 +1,12 @@
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
 
+export const getUrl = (endpoint: string) => `${BASE_URL}${endpoint}`;
+
 export async function request<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
-  const response = await fetch(`${BASE_URL}${endpoint}`, {
+  const response = await fetch(getUrl(endpoint), {
     ...options,
     headers: {
       "Content-Type": "application/json",

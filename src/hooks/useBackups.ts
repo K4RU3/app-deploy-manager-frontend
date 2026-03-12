@@ -54,6 +54,17 @@ export function useBackups(serviceId?: string) {
     }
   };
 
+  const downloadBackup = (file: string) => {
+    if (!serviceId) return;
+    const url = backupsApi.getDownloadUrl(serviceId, file);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", file);
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode?.removeChild(link);
+  };
+
   return {
     backups,
     loading,
@@ -62,5 +73,6 @@ export function useBackups(serviceId?: string) {
     createBackup,
     restoreBackup,
     deleteBackup,
+    downloadBackup,
   };
 }
