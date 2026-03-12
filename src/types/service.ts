@@ -16,5 +16,5 @@ export interface Service {
   enabled: boolean;
   dockerVolume: string;
   autoBackup: boolean;
-  status: "Running" | "Stopped" | "Error";
+  status?: "Running" | "Stopped" | "Error";
 }
