@@ -4,7 +4,7 @@ export interface Service {
   id: string;
   name: string;
   domain: string;
-  repo: string;
+  repositoryUrl: string;
   branch: string;
   deployMode: DeployMode;
   selectedCommit?: string;

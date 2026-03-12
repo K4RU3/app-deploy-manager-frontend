@@ -19,7 +19,12 @@ import type { Service } from "../types/service";
 import { useCommits } from "../hooks/useCommits";
 import { useBackups } from "../hooks/useBackups";
 import { Button } from "../components/ui/Button";
-import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/Card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "../components/ui/Card";
 import { StatusBadge } from "../components/ui/StatusBadge";
 import {
   Table,
@@ -36,10 +41,19 @@ export function ServiceDetail() {
   const [service, setService] = useState<Service | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"overview" | "commits" | "backups">("overview");
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "commits" | "backups"
+  >("overview");
 
   const { commits, loading: commitsLoading } = useCommits(id);
-  const { backups, loading: backupsLoading, createBackup, restoreBackup, deleteBackup, downloadBackup } = useBackups(id);
+  const {
+    backups,
+    loading: backupsLoading,
+    createBackup,
+    restoreBackup,
+    deleteBackup,
+    downloadBackup,
+  } = useBackups(id);
 
   const fetchService = useCallback(async () => {
     if (!id) return;
@@ -77,7 +91,10 @@ export function ServiceDetail() {
       await deployApi.deployLatest(id);
       alert("Deployment started");
     } catch (err) {
-      alert("Deployment failed: " + (err instanceof Error ? err.message : "Unknown error"));
+      alert(
+        "Deployment failed: " +
+          (err instanceof Error ? err.message : "Unknown error"),
+      );
     }
   };
 
@@ -87,7 +104,10 @@ export function ServiceDetail() {
       await deployApi.deployCommit(id, hash);
       alert("Deployment started for commit " + hash);
     } catch (err) {
-      alert("Deployment failed: " + (err instanceof Error ? err.message : "Unknown error"));
+      alert(
+        "Deployment failed: " +
+          (err instanceof Error ? err.message : "Unknown error"),
+      );
     }
   };
 
@@ -103,7 +123,11 @@ export function ServiceDetail() {
     return (
       <div className="text-center py-12">
         <h2 className="text-xl font-bold text-white">Service not found</h2>
-        <Button variant="ghost" onClick={() => navigate("/services")} className="mt-4">
+        <Button
+          variant="ghost"
+          onClick={() => navigate("/services")}
+          className="mt-4"
+        >
           <ArrowLeft className="w-4 h-4 mr-2" /> Back to Services
         </Button>
       </div>
@@ -125,7 +149,11 @@ export function ServiceDetail() {
         </div>
         <div className="flex gap-2">
           <Button variant="secondary" onClick={handleToggle}>
-            {service.enabled ? <Square className="w-4 h-4 mr-2 fill-current" /> : <Play className="w-4 h-4 mr-2 fill-current" />}
+            {service.enabled ? (
+              <Square className="w-4 h-4 mr-2 fill-current" />
+            ) : (
+              <Play className="w-4 h-4 mr-2 fill-current" />
+            )}
             {service.enabled ? "Stop" : "Start"}
           </Button>
           <Button onClick={handleDeployLatest}>
@@ -168,28 +196,58 @@ export function ServiceDetail() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs text-zinc-500 uppercase font-bold">Repository</label>
-                  <p className="text-sm font-mono text-zinc-300 break-all">{service.repo}</p>
+                  <label className="text-xs text-zinc-500 uppercase font-bold">
+                    Repository
+                  </label>
+                  <p className="text-sm font-mono text-zinc-300 break-all">
+                    <a
+                      href={service.repositoryUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-blue-400 transition-colors inline-flex items-center gap-1"
+                    >
+                      {service.repositoryUrl
+                        .split("/")
+                        .filter(Boolean)
+                        .pop()
+                        ?.replace(/\.git$/, "")}
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </p>
                 </div>
                 <div>
-                  <label className="text-xs text-zinc-500 uppercase font-bold">Branch</label>
+                  <label className="text-xs text-zinc-500 uppercase font-bold">
+                    Branch
+                  </label>
                   <p className="text-sm text-zinc-300">{service.branch}</p>
                 </div>
                 <div>
-                  <label className="text-xs text-zinc-500 uppercase font-bold">Port Mapping</label>
+                  <label className="text-xs text-zinc-500 uppercase font-bold">
+                    Port Mapping
+                  </label>
                   <p className="text-sm text-zinc-300">
-                    {service.port 
+                    {service.port
                       ? `${service.port.host}:${service.port.container}/${service.port.protocol}`
                       : "None"}
                   </p>
                 </div>
                 <div>
-                  <label className="text-xs text-zinc-500 uppercase font-bold">Deploy Mode</label>
-                  <p className="text-sm text-zinc-300 capitalize">{service.deployMode}</p>
+                  <label className="text-xs text-zinc-500 uppercase font-bold">
+                    Deploy Mode
+                  </label>
+                  <p className="text-sm text-zinc-300 capitalize">
+                    {service.deployMode}
+                  </p>
                 </div>
               </div>
               <div className="pt-4 border-t border-zinc-800">
-                <Button variant="secondary" className="w-full" onClick={() => window.open(`https://${service.domain}`, '_blank')}>
+                <Button
+                  variant="secondary"
+                  className="w-full"
+                  onClick={() =>
+                    window.open(`https://${service.domain}`, "_blank")
+                  }
+                >
                   <ExternalLink className="w-4 h-4 mr-2" /> Open Application
                 </Button>
               </div>
@@ -204,13 +262,21 @@ export function ServiceDetail() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="text-xs text-zinc-500 uppercase font-bold">Docker Volume</label>
-                <p className="text-sm font-mono text-zinc-300">{service.dockerVolume}</p>
+                <label className="text-xs text-zinc-500 uppercase font-bold">
+                  Docker Volume
+                </label>
+                <p className="text-sm font-mono text-zinc-300">
+                  {service.dockerVolume}
+                </p>
               </div>
               <div className="flex items-center justify-between">
                 <div>
-                  <label className="text-xs text-zinc-500 uppercase font-bold">Auto Backup</label>
-                  <p className="text-sm text-zinc-300">{service.autoBackup ? "Enabled" : "Disabled"}</p>
+                  <label className="text-xs text-zinc-500 uppercase font-bold">
+                    Auto Backup
+                  </label>
+                  <p className="text-sm text-zinc-300">
+                    {service.autoBackup ? "Enabled" : "Disabled"}
+                  </p>
                 </div>
                 <Button variant="secondary" size="sm" onClick={createBackup}>
                   <Database className="w-4 h-4 mr-2" /> Manual Backup
@@ -243,19 +309,32 @@ export function ServiceDetail() {
                   </TableRow>
                 ) : commits.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8 text-zinc-500">
+                    <TableCell
+                      colSpan={5}
+                      className="text-center py-8 text-zinc-500"
+                    >
                       No commits found.
                     </TableCell>
                   </TableRow>
                 ) : (
                   commits.map((commit) => (
                     <TableRow key={commit.hash}>
-                      <TableCell className="font-mono text-xs">{commit.shortHash}</TableCell>
-                      <TableCell className="max-w-xs truncate">{commit.message}</TableCell>
+                      <TableCell className="font-mono text-xs">
+                        {commit.shortHash}
+                      </TableCell>
+                      <TableCell className="max-w-xs truncate">
+                        {commit.message}
+                      </TableCell>
                       <TableCell>{commit.author}</TableCell>
-                      <TableCell className="text-zinc-500">{new Date(commit.date).toLocaleString()}</TableCell>
+                      <TableCell className="text-zinc-500">
+                        {new Date(commit.date).toLocaleString()}
+                      </TableCell>
                       <TableCell>
-                        <Button size="sm" variant="secondary" onClick={() => handleDeployCommit(commit.hash)}>
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => handleDeployCommit(commit.hash)}
+                        >
                           Deploy
                         </Button>
                       </TableCell>
@@ -295,30 +374,46 @@ export function ServiceDetail() {
                   </TableRow>
                 ) : backups.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center py-8 text-zinc-500">
+                    <TableCell
+                      colSpan={4}
+                      className="text-center py-8 text-zinc-500"
+                    >
                       No backups found.
                     </TableCell>
                   </TableRow>
                 ) : (
                   backups.map((backup) => (
                     <TableRow key={backup.file}>
-                      <TableCell className="font-mono text-xs">{backup.file}</TableCell>
+                      <TableCell className="font-mono text-xs">
+                        {backup.file}
+                      </TableCell>
                       <TableCell>{backup.size}</TableCell>
-                      <TableCell className="text-zinc-500">{new Date(backup.createdAt).toLocaleString()}</TableCell>
+                      <TableCell className="text-zinc-500">
+                        {new Date(backup.createdAt).toLocaleString()}
+                      </TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          <Button 
-                            size="sm" 
-                            variant="ghost" 
+                          <Button
+                            size="sm"
+                            variant="ghost"
                             title="Download"
                             onClick={() => downloadBackup(backup.file)}
                           >
                             <Download className="w-4 h-4" />
                           </Button>
-                          <Button size="sm" variant="secondary" onClick={() => restoreBackup(backup.file)}>
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            onClick={() => restoreBackup(backup.file)}
+                          >
                             Restore
                           </Button>
-                          <Button size="sm" variant="ghost" className="text-red-400 hover:text-red-300" onClick={() => deleteBackup(backup.file)}>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-red-400 hover:text-red-300"
+                            onClick={() => deleteBackup(backup.file)}
+                          >
                             <Trash2 className="w-4 h-4" />
                           </Button>
                         </div>
