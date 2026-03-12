@@ -7,6 +7,9 @@ export const backupsApi = {
   create: (serviceId: string) =>
     request<Backup>(`/services/${serviceId}/backup`, {
       method: "POST",
+      headers: {
+        "Content-Type": "text/plain",
+      },
     }),
   restore: (serviceId: string, file: string) =>
     request<void>(`/services/${serviceId}/restore`, {
@@ -16,5 +19,8 @@ export const backupsApi = {
   delete: (serviceId: string, file: string) =>
     request<void>(`/services/${serviceId}/backups/${file}`, {
       method: "DELETE",
+      headers: {
+        "Content-Type": "text/plain",
+      },
     }),
 };

@@ -6,6 +6,9 @@ export const deployApi = {
   deployLatest: (serviceId: string) =>
     request<void>(`/services/${serviceId}/deploy/latest`, {
       method: "POST",
+      headers: {
+        "Content-Type": "text/plain",
+      },
     }),
   deployCommit: (serviceId: string, commitHash: string) =>
     request<void>(`/services/${serviceId}/deploy/commit`, {
